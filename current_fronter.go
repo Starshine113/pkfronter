@@ -8,9 +8,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
 
+	"github.com/Starshine113/pkfronter/structs"
 	"github.com/monaco-io/request"
 )
 
@@ -21,22 +20,22 @@ func getCurrentFronterData(api string, systemID string) []byte {
 	}
 	resp, err := client.Do()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	return resp.Data
 }
 
-func getFront(rawJSON []byte) {
-	var data map[string]interface{}
+func getFront(rawJSON []byte) []structs.Member {
 
-	if err := json.Unmarshal(rawJSON, &data); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	var frontWithTimestamp structs.Front
+	if err := json.Unmarshal(rawJSON, &frontWithTimestamp); err != nil {
+		panic(err)
 	}
-	fmt.Println(data)
-	fmt.Printf("\n")
-	fmt.Println(data["members"])
-	fmt.Println(data["timestamp"])
+
+	var front []structs.Member
+
+	front = frontWithTimestamp.Members
+
+	return front
 }

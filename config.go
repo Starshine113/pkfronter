@@ -8,14 +8,21 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/monaco-io/request"
 	"github.com/pelletier/go-toml"
 )
 
-func readConfig(configPath string) (string, string, string) {
-	configFile, err := ioutil.ReadFile(configPath)
+func readConfig() (string, string, string, string) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	configFile, err := ioutil.ReadFile(home + "/.pksystem.toml")
 	if err != nil {
 		panic(err)
 	}
@@ -27,22 +34,24 @@ func readConfig(configPath string) (string, string, string) {
 	token := config.Get("token").(string)
 	api := "https://api.pluralkit.me/v" + apiVersion
 	systemID := getSystemID(api, token)
+	cacheFile := home + "/" + config.Get("token").(string)
 
-	return api, systemID, token
+	return api, systemID, token, cacheFile
 }
 
 func getSystemID(api string, token string) string {
+	var data map[string]interface{}
+
 	client := request.Client{
 		URL:    api + "/s",
 		Method: "GET",
 		Header: map[string]string{"Authorization": token},
 	}
+
 	resp, err := client.Do()
 	if err != nil {
 		panic(err)
 	}
-
-	var data map[string]interface{}
 
 	if err := json.Unmarshal(resp.Data, &data); err != nil {
 		panic(err)
