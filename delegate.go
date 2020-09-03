@@ -12,7 +12,7 @@ import (
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-func delegate(api string, id string, token string, cacheFile string) {
+func delegate(api string, id string, token string, cacheFile string, systemName string) {
 	flag.Parse()
 
 	if len(flag.Args()) != 0 {
@@ -20,19 +20,18 @@ func delegate(api string, id string, token string, cacheFile string) {
 		case `s`, `switch`:
 			members := getMemberIDs(api, token, id, flag.Args()[1:])
 			commands.Switch(api, token, memberIDsToJSON(members))
-			currentFrontersCmd(api, id, token)
 		case `current`:
-			currentFrontersCmd(api, id, token)
+			currentFrontersCmd(api, id, token, systemName)
 		default:
-			currentFrontersCmd(api, id, token)
+			currentFrontersCmd(api, id, token, systemName)
 		}
 	} else {
-		currentFrontersCmd(api, id, token)
+		currentFrontersCmd(api, id, token, systemName)
 	}
 
 }
 
-func currentFrontersCmd(api string, id string, token string) {
+func currentFrontersCmd(api string, id string, token string, systemName string) {
 	timestamp, fronters := getFront(getCurrentFronterData(api, id, token))
-	commands.PrettyPrintFronters(timestamp, fronters)
+	commands.PrettyPrintFronters(timestamp, fronters, systemName)
 }

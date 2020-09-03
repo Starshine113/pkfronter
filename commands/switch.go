@@ -7,6 +7,7 @@ package commands
  */
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/monaco-io/request"
@@ -20,7 +21,38 @@ func Switch(api string, token string, members []byte) {
 		Header: map[string]string{"Authorization": token},
 		Body:   members,
 	}
-	resp, err := client.Do()
+	resp, _ := client.Do()
 
-	fmt.Println(resp.Code, string(resp.Data), err)
+	//fmt.Println(resp.Code, string(resp.Data), err)
+	prettyPrintSwitchOutput(resp.Code, resp.Data)
+}
+
+func prettyPrintSwitchOutput(code int, resp []byte) {
+	switch code {
+	case 400:
+		fmt.Printf("❌ ")
+		if len(flag.Args()[1:]) == 0 {
+			fmt.Printf("Already switched out.\n")
+		} else if len(flag.Args()[1:]) != 1 {
+			fmt.Printf("Members ")
+			for i, member := range flag.Args()[1:] {
+				if i == len(flag.Args()[1:])-1 {
+					fmt.Printf("%s ", member)
+				} else {
+					fmt.Printf("%s, ", member)
+				}
+			}
+			fmt.Printf("are already fronting.\n")
+		} else {
+			fmt.Printf("Member %s is already fronting.\n", flag.Args()[1])
+		}
+	case 204:
+		if len(flag.Args()[1:]) == 0 {
+			fmt.Printf("✅ Switch-out registered.\n")
+		} else {
+			fmt.Printf("✅ Switch registered.\n")
+		}
+	default:
+		fmt.Printf("❌ %s\n", string(resp))
+	}
 }

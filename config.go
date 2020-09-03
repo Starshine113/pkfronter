@@ -16,7 +16,7 @@ import (
 	"github.com/pelletier/go-toml"
 )
 
-func readConfig() (string, string, string, string) {
+func readConfig() (string, string, string, string, string) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println(err)
@@ -33,13 +33,13 @@ func readConfig() (string, string, string, string) {
 	}
 	token := config.Get("token").(string)
 	api := "https://api.pluralkit.me/v" + apiVersion
-	systemID := getSystemID(api, token)
+	systemID, systemName := getSystemID(api, token)
 	cacheFile := home + "/" + config.Get("token").(string)
 
-	return api, systemID, token, cacheFile
+	return api, systemID, token, cacheFile, systemName
 }
 
-func getSystemID(api string, token string) string {
+func getSystemID(api string, token string) (string, string) {
 	var data map[string]interface{}
 
 	client := request.Client{
@@ -57,5 +57,11 @@ func getSystemID(api string, token string) string {
 		panic(err)
 	}
 
-	return string(data["id"].(string))
+	if string(data["name"].(string)) != "" {
+		systemName := data["name"].(string)
+		return string(data["id"].(string)), systemName
+	} else {
+		systemName := "[no system name]"
+		return string(data["id"].(string)), systemName
+	}
 }

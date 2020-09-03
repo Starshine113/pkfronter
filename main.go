@@ -10,7 +10,7 @@ package main
 const apiVersion string = "1"
 
 func main() {
-	api, id, token, cacheFile := readConfig()
+	api, id, token, cacheFile, systemName := readConfig()
 
-	delegate(api, id, token, cacheFile)
+	delegate(api, id, token, cacheFile, systemName)
 }

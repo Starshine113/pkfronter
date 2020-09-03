@@ -14,7 +14,8 @@ import (
 )
 
 // PrettyPrintFronters prints prins a comma-separated list of all people currently fronting.
-func PrettyPrintFronters(timestamp string, inputData []structs.Member) {
+func PrettyPrintFronters(timestamp string, inputData []structs.Member, systemName string) {
+	fmt.Printf("Current fronter(s) of %s:\n", systemName)
 	for num, member := range inputData {
 		if len(inputData) == 1 {
 			fmt.Printf("%s", member.Name)

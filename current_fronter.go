@@ -28,15 +28,12 @@ func getCurrentFronterData(api string, systemID string, token string) []byte {
 }
 
 func getFront(rawJSON []byte) (string, []structs.Member) {
-
 	var frontWithTimestamp structs.Front
 	if err := json.Unmarshal(rawJSON, &frontWithTimestamp); err != nil {
 		panic(err)
 	}
 
-	var front []structs.Member
-
-	front = frontWithTimestamp.Members
+	front := frontWithTimestamp.Members
 	timestamp := frontWithTimestamp.Timestamp
 
 	return timestamp, front
