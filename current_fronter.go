@@ -13,10 +13,11 @@ import (
 	"github.com/monaco-io/request"
 )
 
-func getCurrentFronterData(api string, systemID string) []byte {
+func getCurrentFronterData(api string, systemID string, token string) []byte {
 	client := request.Client{
 		URL:    api + "/s/" + systemID + "/fronters",
 		Method: "GET",
+		Header: map[string]string{"Authorization": token},
 	}
 	resp, err := client.Do()
 	if err != nil {
@@ -26,7 +27,7 @@ func getCurrentFronterData(api string, systemID string) []byte {
 	return resp.Data
 }
 
-func getFront(rawJSON []byte) []structs.Member {
+func getFront(rawJSON []byte) (string, []structs.Member) {
 
 	var frontWithTimestamp structs.Front
 	if err := json.Unmarshal(rawJSON, &frontWithTimestamp); err != nil {
@@ -36,6 +37,7 @@ func getFront(rawJSON []byte) []structs.Member {
 	var front []structs.Member
 
 	front = frontWithTimestamp.Members
+	timestamp := frontWithTimestamp.Timestamp
 
-	return front
+	return timestamp, front
 }

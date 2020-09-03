@@ -8,12 +8,13 @@ package commands
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Starshine113/pkfronter/structs"
 )
 
 // PrettyPrintFronters prints prins a comma-separated list of all people currently fronting.
-func PrettyPrintFronters(inputData []structs.Member) {
+func PrettyPrintFronters(timestamp string, inputData []structs.Member) {
 	for num, member := range inputData {
 		if len(inputData) == 1 {
 			fmt.Printf("%s", member.Name)
@@ -25,5 +26,10 @@ func PrettyPrintFronters(inputData []structs.Member) {
 			}
 		}
 	}
-	fmt.Printf("\n")
+	switchTime, err := time.Parse(time.RFC3339, timestamp)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("\nSince: %s\n", switchTime.Format(time.RFC1123))
 }

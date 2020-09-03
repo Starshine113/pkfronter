@@ -17,22 +17,22 @@ func delegate(api string, id string, token string, cacheFile string) {
 
 	if len(flag.Args()) != 0 {
 		switch flag.Args()[0] {
-		case `current`:
-			currentFrontersCmd(api, id)
-		case `switch`:
+		case `s`, `switch`:
 			members := getMemberIDs(api, token, id, flag.Args()[1:])
 			commands.Switch(api, token, memberIDsToJSON(members))
-			/* commands.Switch(token, id, flag.Args()[1:]) */
+			currentFrontersCmd(api, id, token)
+		case `current`:
+			currentFrontersCmd(api, id, token)
 		default:
-			currentFrontersCmd(api, id)
+			currentFrontersCmd(api, id, token)
 		}
 	} else {
-		currentFrontersCmd(api, id)
+		currentFrontersCmd(api, id, token)
 	}
 
 }
 
-func currentFrontersCmd(api string, id string) {
-	fronters := getFront(getCurrentFronterData(api, id))
-	commands.PrettyPrintFronters(fronters)
+func currentFrontersCmd(api string, id string, token string) {
+	timestamp, fronters := getFront(getCurrentFronterData(api, id, token))
+	commands.PrettyPrintFronters(timestamp, fronters)
 }
