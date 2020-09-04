@@ -23,7 +23,6 @@ func Switch(api string, token string, members []byte) {
 	}
 	resp, _ := client.Do()
 
-	//fmt.Println(resp.Code, string(resp.Data), err)
 	prettyPrintSwitchOutput(resp.Code, resp.Data)
 }
 

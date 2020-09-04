@@ -23,7 +23,12 @@ func PrettyPrintFronters(timestamp string, inputData []structs.Member, systemNam
 			if num == len(inputData)-1 {
 				fmt.Printf("and %s", member.Name)
 			} else {
-				fmt.Printf("%s, ", member.Name)
+				fmt.Printf("%s", member.Name)
+				if num != len(inputData)-2 {
+					fmt.Printf(", ")
+				} else {
+					fmt.Printf(" ")
+				}
 			}
 		}
 	}

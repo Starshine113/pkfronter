@@ -8,6 +8,7 @@ package main
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/Starshine113/pkfronter/structs"
 	"github.com/monaco-io/request"
@@ -35,7 +36,7 @@ func getMemberIDs(api string, token string, systemID string, memberInput []strin
 	memberIDs := make([]string, 0)
 
 	for _, memberName := range memberInput {
-		if memberMap[memberName] != "" {
+		if memberMap[strings.ToLower(memberName)] != "" {
 
 		}
 		if memberID, ok := memberMap[memberName]; ok {
@@ -50,7 +51,7 @@ func makeMemberMap(memberStruct []structs.Member) map[string]string {
 	memberMap := make(map[string]string)
 
 	for _, member := range memberStruct {
-		memberMap[member.Name] = member.ID
+		memberMap[strings.ToLower(member.Name)] = member.ID
 	}
 
 	return memberMap
